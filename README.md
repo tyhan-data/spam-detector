@@ -1,6 +1,6 @@
 # 🛡️ Spam Detector
 
-> A machine learning-powered spam classification system using Multinomial Naive Bayes to identify and filter unwanted messages with high accuracy.
+> A machine learning-powered spam classification system using Multinomial Naive Bayes, with **FastAPI backend** and **Docker containerization** for production-ready deployment.
 
 ---
 
@@ -14,39 +14,50 @@
   - [Docker Setup](#docker-setup)
 - [Project Structure](#project-structure)
 - [Usage](#usage)
+- [API Documentation](#api-documentation)
 - [Deployment](#deployment)
 - [Model Details](#model-details)
-- [Contributing](#contributing)
 
 ---
 
 ## Overview
 
-This project implements an intelligent spam detection system that leverages **Multinomial Naive Bayes** classification to automatically identify spam messages. The model has been trained on a comprehensive dataset and is deployed as an interactive web application using Streamlit.
+This project implements an intelligent spam detection system powered by **Multinomial Naive Bayes** classification. It features a **FastAPI backend** for the prediction API and a **Streamlit web interface** for user interaction, both fully containerized with Docker.
+
+### 🆕 What's New
+
+- ✨ **FastAPI Backend** - High-performance REST API for predictions
+- 🐳 **Docker Support** - Production-ready containerization
+- 🚀 **Streamlit Frontend** - Interactive web interface
+- ⚡ **Scalable Architecture** - Easy deployment on any cloud platform
 
 ### Key Statistics
+
 - **Algorithm**: Multinomial Naive Bayes
-- **Primary Language**: Python (Jupyter Notebooks for development)
-- **Framework**: Streamlit (Web Interface)
+- **Backend Framework**: FastAPI
+- **Frontend Framework**: Streamlit
+- **Containerization**: Docker
 - **Performance**: Production-ready with optimized inference
 
 ---
 
 ## ✨ Features
 
-- ✅ Real-time spam detection
+- ✅ Real-time spam detection via REST API
 - ✅ High-accuracy classification (Naive Bayes algorithm)
-- ✅ Interactive web interface
+- ✅ Interactive web interface (Streamlit)
+- ✅ FastAPI with automatic OpenAPI documentation
 - ✅ Pre-trained model (joblib format)
-- ✅ Easy deployment on cloud platforms
-- ✅ Docker containerization support
+- ✅ Docker containerization
 - ✅ Lightweight and scalable architecture
+- ✅ Easy deployment on cloud platforms
 
 ---
 
 ## 🚀 Live Demo
 
-Try the application online (free): [Streamlit Cloud Demo](https://bcftchnrzapp4cgylunkqjv.streamlit.app/)
+- **Web Interface**: [Streamlit Demo](https://spam-detector-mat.streamlit.app/)
+- **Docker Hub**: [tyhan55/spam-detector-api](https://hub.docker.com/r/tyhan55/spam-detector-api)
 
 ---
 
@@ -55,7 +66,7 @@ Try the application online (free): [Streamlit Cloud Demo](https://bcftchnrzapp4c
 ### Local Setup
 
 #### Prerequisites
-- Python 3.8 or higher
+- Python 3.9 or higher
 - pip (Python package manager)
 
 #### Steps
@@ -71,13 +82,18 @@ Try the application online (free): [Streamlit Cloud Demo](https://bcftchnrzapp4c
    pip install -r requirements.txt
    ```
 
-3. **Run the application**
+3. **Run the FastAPI backend**
    ```bash
-   streamlit run app.py
+   uvicorn app.main:app --reload
    ```
+   - API will be available at: `http://localhost:8000`
+   - API documentation at: `http://localhost:8000/docs`
 
-4. **Access the app**
-   Open your browser and navigate to: `http://localhost:8501`
+4. **Run the Streamlit frontend (in a new terminal)**
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+   - Web interface will be available at: `http://localhost:8501`
 
 ---
 
@@ -85,7 +101,6 @@ Try the application online (free): [Streamlit Cloud Demo](https://bcftchnrzapp4c
 
 #### Prerequisites
 - Docker Desktop installed ([Download here](https://www.docker.com/products/docker-desktop))
-- Docker daemon running on your system
 
 #### Quick Start
 
@@ -97,120 +112,31 @@ Try the application online (free): [Streamlit Cloud Demo](https://bcftchnrzapp4c
 
 2. **Build the Docker image**
    ```bash
-   docker build -t spam-detection:v1 .
+   docker build -t spam-detector-api:latest .
    ```
 
 3. **Run the container**
    ```bash
-   docker run -p 8501:8501 spam-detection:v1
+   docker run -p 8000:8000 spam-detector-api:latest
    ```
 
-4. **Access the app**
-   Open your browser and navigate to: `http://localhost:8501`
+4. **Access the API**
+   - API: `http://localhost:8000`
+   - API Documentation: `http://localhost:8000/docs`
 
 5. **Stop the container**
    ```bash
-   # Find the container ID
-   docker ps
-   
-   # Stop the running container
+   docker ps  # Find the container ID
    docker stop <container_id>
    ```
 
-#### Understanding the Docker Commands
+#### Using Docker Hub
 
-| Command | Explanation |
-|---------|-------------|
-| `docker build -t spam-detection:v1 .` | Builds a Docker image named `spam-detection` with tag `v1` from the Dockerfile in current directory |
-| `docker run -p 8501:8501 spam-detection:v1` | Runs a container from the image and maps port 8501 (host) to port 8501 (container) |
-| `-p 8501:8501` | Port mapping: `<host_port>:<container_port>` |
+Pull the pre-built image from Docker Hub:
 
-#### Advanced Docker Options
-
-**Run in background (detached mode)**
 ```bash
-docker run -d -p 8501:8501 --name spam-app spam-detection:v1
-```
-
-**View logs**
-```bash
-docker logs spam-app
-```
-
-**View running containers**
-```bash
-docker ps
-```
-
-**Stop container**
-```bash
-docker stop spam-app
-```
-
-**Remove container**
-```bash
-docker rm spam-app
-```
-
-**Remove image**
-```bash
-docker rmi spam-detection:v1
-```
-
-#### Docker Compose (Optional)
-
-For easier management, use Docker Compose:
-
-1. **Create a `docker-compose.yml` file** in the project root:
-   ```yaml
-   version: '3.8'
-   services:
-     spam-detector:
-       build: .
-       ports:
-         - "8501:8501"
-       container_name: spam-detector-app
-       environment:
-         - STREAMLIT_SERVER_HEADLESS=true
-   ```
-
-2. **Run with Docker Compose**
-   ```bash
-   docker-compose up
-   ```
-
-3. **Run in background**
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **View logs**
-   ```bash
-   docker-compose logs -f
-   ```
-
-5. **Stop the service**
-   ```bash
-   docker-compose down
-   ```
-
-#### Create a Dockerfile
-
-If a Dockerfile doesn't exist, create one in the project root:
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 8501
-
-CMD ["streamlit", "run", "app.py", "--server.headless=true"]
+docker pull tyhan55/spam-detector-api:latest
+docker run -p 8000:8000 tyhan55/spam-detector-api:latest
 ```
 
 ---
@@ -219,103 +145,140 @@ CMD ["streamlit", "run", "app.py", "--server.headless=true"]
 
 ```
 spam-detector/
-├── app.py                          # Main Streamlit application
-├── requirements.txt                # Python dependencies
-├── Spam_detector.joblib            # Pre-trained model file
-├── Count_Vectorizer.joblib         # Feature vectorizer
-├── Dockerfile                      # Docker configuration
-├── docker-compose.yml              # Docker Compose configuration (optional)
-├── README.md                       # This file
-└── notebooks/                      # Jupyter notebooks (analysis & training)
-    └── spam_detection_notebook.ipynb
+├── app/
+│   ├── main.py                 # FastAPI application
+│   ├── schema.py               # Pydantic data models
+│   └── model_service.py        # Model loading & prediction logic
+├── models/
+│   ├── Spam_detector.joblib    # Pre-trained Naive Bayes model
+│   └── Count_Vectorizer.joblib # Feature vectorizer
+├── streamlit_app.py            # Streamlit web interface
+├── requirements.txt            # Python dependencies
+├── Dockerfile                  # Docker configuration
+├── .dockerignore               # Docker ignore rules
+├── README.md                   # This file
+└── Spam Detection.ipynb        # Jupyter notebook (model training)
 ```
 
 ---
 
 ## 💻 Usage
 
-### Running the Web Application
+### FastAPI Backend
 
-1. Start the application (Local or Docker)
-2. Enter or paste a message in the text input field
-3. Click "Classify" or "Detect Spam"
-4. View the prediction result (Spam/Ham)
-5. Confidence score is displayed for transparency
+#### Using cURL
 
-### Example Input
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"Text": "Congratulations! You won a FREE iPhone. Click here to claim!"}'
+```
+
+#### Using Python
+
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:8000/predict",
+    json={"Text": "Your message here"}
+)
+
+print(response.json())
+# Output: {"Target": "spam", "Probability": 0.95}
+```
+
+### Interactive Web Interface (Streamlit)
+
+1. Open `http://localhost:8501`
+2. Enter or paste a message
+3. Click "🔍 Check Message"
+4. View the prediction result and confidence score
+
+#### Example Messages
 - **Spam**: "Congratulations! You've won a FREE iPhone. Click here to claim!"
 - **Ham**: "Hi, let's catch up this weekend?"
 
 ---
 
+## 📡 API Documentation
+
+### Endpoint: `/predict` (POST)
+
+**Request Body:**
+```json
+{
+  "Text": "Your message here"
+}
+```
+
+**Response:**
+```json
+{
+  "Target": "spam",
+  "Probability": 0.95
+}
+```
+
+**Interactive API Docs:**
+- Visit `http://localhost:8000/docs` (Swagger UI)
+- Visit `http://localhost:8000/redoc` (ReDoc)
+
+---
+
 ## 🌍 Deployment
 
-### Option 1: Streamlit Cloud (Recommended - Free)
+### Option 1: Docker Hub
 
-1. Push your repository to GitHub
-2. Visit [Streamlit Cloud](https://share.streamlit.io)
-3. Click "New app"
-4. Select your repository and branch
-5. Select `app.py` as the entry point
-6. Deploy!
+Push your image to Docker Hub:
 
-### Option 2: Hugging Face Spaces (Free)
+```bash
+docker tag spam-detector-api:latest tyhan55/spam-detector-api:latest
+docker push tyhan55/spam-detector-api:latest
+```
 
-1. Go to [Hugging Face New Space](https://huggingface.co/new-space)
-2. Select **Streamlit** as the SDK
-3. Upload the following files:
-   - `app.py`
-   - `requirements.txt`
-   - `Spam_detector.joblib`
-   - `Count_Vectorizer.joblib`
-4. Done! Your app is live
+### Option 2: Cloud Platforms
 
-### Option 3: Docker (Any Cloud Provider)
-
-Deploy using Docker on:
-- **AWS**: ECR + ECS or Elastic Beanstalk
+- **AWS**: ECR + ECS, Elastic Beanstalk, or Lambda
 - **Google Cloud**: Cloud Run
-- **Azure**: Container Instances
+- **Azure**: Container Instances, App Service
+- **Heroku**: Using Docker support
 - **DigitalOcean**: App Platform
-- **Heroku**: With Docker support
-- **Self-hosted**: Any VPS with Docker installed
+- **Render**: Container deployment
+
+### Option 3: Streamlit Cloud (Frontend Only)
+
+1. Push repository to GitHub
+2. Visit [Streamlit Cloud](https://share.streamlit.io)
+3. Deploy `streamlit_app.py`
+4. Configure API_URL to point to your backend
 
 ---
 
 ## 🤖 Model Details
 
 ### Algorithm: Multinomial Naive Bayes
+
 - **Type**: Probabilistic classifier
-- **Best For**: Text classification tasks
-- **Advantages**: Fast, interpretable, works well with sparse data
+- **Best For**: Text classification
+- **Advantages**: Fast, interpretable, handles sparse data well
 - **Training Data**: SMS/Email spam corpus
 
-### Model Performance
-- Efficiently classifies text into Spam/Ham categories
-- Low latency for real-time predictions
-- Lightweight model size (~1MB)
+### Performance
 
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit your changes (`git commit -m 'Add improvement'`)
-4. Push to the branch (`git push origin feature/improvement`)
-5. Open a Pull Request
+- Efficient text classification into Spam/Ham categories
+- Low latency predictions
+- Lightweight model (~1MB)
 
 ---
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+MIT License - See LICENSE file for details
 
 ---
 
-## 📧 Contact & Support
+## 📧 Contact
 
 - **Author**: tyhan-data
 - **Repository**: [GitHub - Spam Detector](https://github.com/tyhan-data/spam-detector)
@@ -323,16 +286,5 @@ This project is open source and available under the MIT License.
 
 ---
 
-## 🎯 Future Enhancements
-
-- [ ] Multi-language support
-- [ ] Advanced model comparison (Random Forest, SVM, Deep Learning)
-- [ ] User feedback mechanism for model improvement
-- [ ] API endpoint development
-- [ ] Batch processing capability
-- [ ] Model retraining pipeline
-
----
-
-**Last Updated**: July 2026  
-**Status**: ✅ Production Ready
+**Last Updated**: September 2026  
+**Status**: ✅ Production Ready (FastAPI + Docker)
