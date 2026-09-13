@@ -8,13 +8,13 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the project
 COPY . .
 
 # Port Address
-EXPOSE 8501
+EXPOSE 8000
 
 # Start streamlit server
-CMD [ "streamlit", "run", "app.py", "--server.address=0.0.0.0", "--server.port=8501" ]
+CMD [ "uvicorn", "app.main:app",  "--host", "0.0.0.0", "--port", "8000" ]
